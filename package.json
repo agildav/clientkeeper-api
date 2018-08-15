@@ -1,0 +1,24 @@
+{
+  "name": "clientkeeper-api",
+  "version": "1.0.0",
+  "description": "Simple client management api",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agildav/clientkeeper-api.git"
+  },
+  "keywords": [
+    "clientkeeper",
+    "management",
+    "api"
+  ],
+  "author": "Gil",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/agildav/clientkeeper-api/issues"
+  },
+  "homepage": "https://github.com/agildav/clientkeeper-api#readme"
+}
