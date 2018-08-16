@@ -20,12 +20,64 @@ app.get("/api/clients", (req, res) => {
     if (err) {
       res.send(err);
     } else {
-      console.log("Sending clients to client side");
       res.json(clients);
     }
   });
 });
 
+//  Add a client
+//  TODO: avoid duplicates
+app.post("/api/clients", (req, res) => {
+  db.clients.insert(req.body, (err, client) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.json(client);
+    }
+  });
+});
+
+//  Update a client
+//  TODO: avoid updating to an existing client
+app.put("/api/clients/:id", (req, res) => {
+  const id = mongojs.ObjectId(req.params.id);
+  db.clients.findAndModify(
+    {
+      query: { _id: id },
+      update: {
+        $set: {
+          first_name: req.body.first_name,
+          last_name: req.body.last_name,
+          email: req.body.email,
+          phone: req.body.phone
+        }
+      },
+      //  Add if client does not exist
+      new: true
+    },
+    (err, client) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.json(client);
+      }
+    }
+  );
+});
+
+//  Delete client
+app.delete("/api/clients/:id", (req, res) => {
+  const id = mongojs.ObjectId(req.params.id);
+  db.clients.remove({ _id: id }, (err, client) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.json(client);
+    }
+  });
+});
+
+//  Start server
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
