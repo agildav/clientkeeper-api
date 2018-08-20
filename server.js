@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const mongojs = require("mongojs");
+const cors = require("cors");
 
 //  Setup init
 const app = express();
@@ -8,6 +9,7 @@ const port = process.env.PORT || 3000;
 const db = mongojs("clientkeeper", ["clients"]);
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
+app.use(cors());
 
 //  Routes
 app.get("/", (req, res) => {
