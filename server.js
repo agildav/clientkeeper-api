@@ -28,43 +28,51 @@ app.get("/api/clients", (req, res) => {
 });
 
 //  Add a client
-//  TODO: avoid duplicates
 app.post("/api/clients", (req, res) => {
-  db.clients.insert(req.body, (err, client) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.json(client);
-    }
-  });
-});
-
-//  Update a client
-//  TODO: avoid updating to an existing client
-app.put("/api/clients/:id", (req, res) => {
-  const id = mongojs.ObjectId(req.params.id);
-  db.clients.findAndModify(
-    {
-      query: { _id: id },
-      update: {
-        $set: {
-          first_name: req.body.first_name,
-          last_name: req.body.last_name,
-          email: req.body.email,
-          phone: req.body.phone
-        }
-      },
-      //  Add if client does not exist
-      new: true
-    },
-    (err, client) => {
+  const { first_name, last_name, email, phone } = req.body;
+  if (!first_name || !last_name || !email || !phone) {
+    res.sendStatus(403);
+  } else {
+    db.clients.insert(req.body, (err, client) => {
       if (err) {
         res.send(err);
       } else {
         res.json(client);
       }
-    }
-  );
+    });
+  }
+});
+
+//  Update a client
+app.put("/api/clients/:id", (req, res) => {
+  const { first_name, last_name, email, phone } = req.body;
+  if (!first_name || !last_name || !email || !phone) {
+    res.sendStatus(403);
+  } else {
+    const id = mongojs.ObjectId(req.params.id);
+    db.clients.findAndModify(
+      {
+        query: { _id: id },
+        update: {
+          $set: {
+            first_name,
+            last_name,
+            email,
+            phone
+          }
+        },
+        //  Add if client does not exist
+        new: true
+      },
+      (err, client) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.json(client);
+        }
+      }
+    );
+  }
 });
 
 //  Delete client
