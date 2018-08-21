@@ -28,15 +28,27 @@ app.get("/api/clients", (req, res) => {
 });
 
 //  Add a client
-//  TODO: avoid duplicates
 app.post("/api/clients", (req, res) => {
-  db.clients.insert(req.body, (err, client) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.json(client);
-    }
-  });
+  const { first_name, last_name, email, phone } = req.body;
+  if (!first_name || !last_name || !email || !phone) {
+    res.sendStatus(403);
+  } else {
+    //  Check if email exists
+    db.clients.findOne({ email }, (err, client) => {
+      if (err) res.send(err);
+      else if (client) {
+        res.send(403, "Email exists");
+      } else {
+        db.clients.insert(req.body, (err, client) => {
+          if (err) {
+            res.send(err);
+          } else {
+            res.json(client);
+          }
+        });
+      }
+    });
+  }
 });
 
 //  Update a client
